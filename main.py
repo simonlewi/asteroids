@@ -2,10 +2,12 @@
 # the open-source pygame library
 # throughout this file
 import pygame
-
 from constants import *
-
 from player import Player
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
+from circleshape import CircleShape
+import sys
 
 def print_screen_width_height():
     print("Screen width:", SCREEN_WIDTH)
@@ -25,8 +27,12 @@ def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     Player.containers = (updatable, drawable)
+    asteroids = pygame.sprite.Group()
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = updatable
 
     player = Player(x = SCREEN_WIDTH / 2, y = SCREEN_HEIGHT / 2)
+    asteroid_field = AsteroidField()
 
     # Game loop
     while True:
@@ -36,6 +42,10 @@ def main():
             
         # Update game state
         for sprite in updatable:
+            if isinstance(sprite, Asteroid):
+                if sprite.collision(player):
+                    print("Game Over!")
+                    sys.exit()
             sprite.update(dt)
         
         # Draw everything
