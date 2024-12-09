@@ -1,3 +1,4 @@
+# Asteroid field class
 import pygame
 import random
 from asteroid import Asteroid
@@ -33,8 +34,14 @@ class AsteroidField(pygame.sprite.Sprite):
         self.spawn_timer = 0.0
 
     def spawn(self, radius, position, velocity):
-        asteroid = Asteroid(position.x, position.y, radius)
-        asteroid.velocity = velocity
+        normalized_velocity = velocity.normalize()
+
+        # Generate a random speed that doesn't exceed the max speed"
+        random_speed = random.uniform(30, ASTEROID_MAX_SPEED) # Adjust minimum, if needed
+        velocity = normalized_velocity * random_speed
+        asteroid = Asteroid(position.x, position.y, radius, velocity)
+        return asteroid
+        
 
     def update(self, dt):
         self.spawn_timer += dt
