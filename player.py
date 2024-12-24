@@ -11,7 +11,8 @@ from constants import (
     SCREEN_WIDTH, 
     SCREEN_HEIGHT,
     PLAYER_SHOOT_SPEED,
-    PLAYER_SHOOT_COOLDOWN
+    PLAYER_SHOOT_COOLDOWN,
+    PLAYER_LIVES
     )
 from shot import Shot
 test_vector = Vector2(1, 1)
@@ -22,6 +23,10 @@ class Player(CircleShape):
         self.rotation = 0
         self.shots_group = shots_group
         self.cooldown_timer = 0
+        self.lives = PLAYER_LIVES
+
+    def reposition_player(self, x, y):
+        self.position = pygame.Vector2(x, y)
         
     # Player shape and color
     def triangle(self):
@@ -31,6 +36,12 @@ class Player(CircleShape):
         b = self.position - forward * self.radius - right
         c = self.position - forward * self.radius + right
         return [a, b, c]
+    
+    # Render lives on the screen
+    def display_lives(self, screen):
+        font = pygame.font.Font(None, 24)
+        text = font.render(f'Lives: {self.lives}', True, (255, 255, 255))
+        screen.blit(text, (10, 10))
     
     # Draw player
     def draw(self, screen):

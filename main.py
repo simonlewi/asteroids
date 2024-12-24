@@ -26,6 +26,8 @@ def main():
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+    background_image = pygame.image.load('assets/background.jpg')
+
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     Player.containers = (updatable, drawable)
@@ -48,8 +50,13 @@ def main():
         for sprite in updatable:
             if isinstance(sprite, Asteroid):
                 if sprite.collision(player):
-                    print("Game Over!")
-                    sys.exit()
+                    player.lives -= 1
+                    if player.lives <= 0:
+                        print("Game Over!")
+                        sys.exit()
+                    else:
+                    # Reset the player's position for respawning
+                        player.reposition_player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
             sprite.update(dt)
         
         # Check bullet collisions
@@ -63,6 +70,8 @@ def main():
         
         # Draw everything
         screen.fill((0, 0, 0))
+        screen.blit(background_image, (0, 0))
+        player.display_lives(screen)
         for sprite in drawable:
             sprite.draw(screen)
         pygame.display.flip()
